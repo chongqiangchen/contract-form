@@ -13,10 +13,9 @@ import { useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import styled from '@emotion/styled';
 import { useAccount, useContract, useProvider, useSigner } from 'wagmi';
-import { Connect } from './components/Connect';
-import { Account } from './components/Account';
-import { NetworkSwitcher } from './components/NetworkSwitcher';
 import { Typography } from '@mui/material';
+import AuthLogin from './components/AuthLogin';
+import { Account } from './components/Account';
 
 const RootStyle = styled('div')(() => ({
   padding: '30px',
@@ -104,27 +103,31 @@ const ContractNameSelect = ({ abi, onSelect }: IABISelectProps) => {
 }
 
 function App() {
-  const { data } = useAccount();
-
   return (
     <RootStyle>
-      <Connect />
-      <Box>
-        {data && (
-          <>
-            <Account />
-            <NetworkSwitcher />
-          </>
-        )}
+      <AuthLogin />
+      <Box
+        sx={{
+          paddingTop: 2,
+          paddingBottom: 2,
+        }}
+      >
+        <Typography>Current Account: </Typography>
+        <Account />
       </Box>
       <Divider />
-      <ContractForm
-        openAbiSelect
-        renderElement={Element}
-        renderGroupWrapper={GroupItemWrapper}
-        renderABISelect={ContractNameSelect}
-        abi={ABI_BEP20}
-      />
+      <Box
+        mt={2}
+      >
+        <ContractForm
+          openAbiSelect
+          renderElement={Element}
+          renderGroupWrapper={GroupItemWrapper}
+          renderABISelect={ContractNameSelect}
+          abi={ABI_BEP20}
+        />
+      </Box>
+      
     </RootStyle>
   )
 }
