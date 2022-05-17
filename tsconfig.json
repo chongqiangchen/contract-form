@@ -1,0 +1,14 @@
+{
+    "exclude": [
+        "packages/**/lib/**",
+        "packages/**/site/**"
+    ],
+    "references": [
+        {
+            "path": "./packages/lib"
+        },
+        {
+            "path": "./packages/site"
+        }
+    ]
+}
