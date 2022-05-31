@@ -1,4 +1,5 @@
 import { useAccount, useEnsName } from 'wagmi'
+import { shortName } from '../utils/shortName'
 
 export function Account() {
   const { data: accountData } = useAccount()
@@ -6,8 +7,8 @@ export function Account() {
 
   return (
     <div>
-      {ensNameData ?? accountData?.address}
-      {ensNameData ? ` (${accountData?.address})` : null}
+      {ensNameData ?? shortName(accountData?.address || '')}
+      {ensNameData ? ` (${shortName(accountData?.address || '')})` : null}
     </div>
   )
 }

@@ -29,9 +29,9 @@ var __objRest = (source, exclude) => {
     }
   return target;
 };
-import React$1, { useContext, useMemo, useState } from "react";
-const AbiGlobalContext = React$1.createContext(null);
-const AbiGlobalProvider = ({ children, value }) => /* @__PURE__ */ React$1.createElement(AbiGlobalContext.Provider, {
+import React, { useContext, useMemo, useState, useEffect } from "react";
+const AbiGlobalContext = React.createContext(null);
+const AbiGlobalProvider = ({ children, value }) => /* @__PURE__ */ React.createElement(AbiGlobalContext.Provider, {
   value
 }, children);
 const useAbiGlobal = () => useContext(AbiGlobalContext);
@@ -73,11 +73,11 @@ const INPUT_VALIDATION_RULES = {
   required: "required",
   validate: "validate"
 };
-const HookFormContext = React$1.createContext(null);
-const useFormContext = () => React$1.useContext(HookFormContext);
+const HookFormContext = React.createContext(null);
+const useFormContext = () => React.useContext(HookFormContext);
 const FormProvider$1 = (props) => {
   const _a = props, { children } = _a, data = __objRest(_a, ["children"]);
-  return React$1.createElement(HookFormContext.Provider, { value: data }, props.children);
+  return React.createElement(HookFormContext.Provider, { value: data }, props.children);
 };
 var getProxyFormState = (formState, _proxyFormState, localProxyFormState, isRoot = true) => {
   const result = {};
@@ -103,9 +103,9 @@ var shouldRenderFormState = (formStateData, _proxyFormState, isRoot) => {
 var convertToArrayPayload = (value) => Array.isArray(value) ? value : [value];
 var shouldSubscribeByName = (name, signalName, exact) => exact && signalName ? name === signalName : !name || !signalName || name === signalName || convertToArrayPayload(name).some((currentName) => currentName && (currentName.startsWith(signalName) || signalName.startsWith(currentName)));
 function useSubscribe(props) {
-  const _props = React$1.useRef(props);
+  const _props = React.useRef(props);
   _props.current = props;
-  React$1.useEffect(() => {
+  React.useEffect(() => {
     const tearDown = (subscription2) => {
       if (subscription2) {
         subscription2.unsubscribe();
@@ -120,8 +120,8 @@ function useSubscribe(props) {
 function useFormState(props) {
   const methods = useFormContext();
   const { control = methods.control, disabled, name, exact } = props || {};
-  const [formState, updateFormState] = React$1.useState(control._formState);
-  const _localProxyFormState = React$1.useRef({
+  const [formState, updateFormState] = React.useState(control._formState);
+  const _localProxyFormState = React.useRef({
     isDirty: false,
     dirtyFields: false,
     touchedFields: false,
@@ -129,16 +129,16 @@ function useFormState(props) {
     isValid: false,
     errors: false
   });
-  const _name = React$1.useRef(name);
-  const _mounted = React$1.useRef(true);
+  const _name = React.useRef(name);
+  const _mounted = React.useRef(true);
   _name.current = name;
-  const callback = React$1.useCallback((value) => _mounted.current && shouldSubscribeByName(_name.current, value.name, exact) && shouldRenderFormState(value, _localProxyFormState.current) && updateFormState(__spreadValues(__spreadValues({}, control._formState), value)), [control, exact]);
+  const callback = React.useCallback((value) => _mounted.current && shouldSubscribeByName(_name.current, value.name, exact) && shouldRenderFormState(value, _localProxyFormState.current) && updateFormState(__spreadValues(__spreadValues({}, control._formState), value)), [control, exact]);
   useSubscribe({
     disabled,
     callback,
     subject: control._subjects.state
   });
-  React$1.useEffect(() => {
+  React.useEffect(() => {
     _mounted.current = true;
     return () => {
       _mounted.current = false;
@@ -171,9 +171,9 @@ var objectHasFunction = (data) => {
 function useWatch(props) {
   const methods = useFormContext();
   const { control = methods.control, name, defaultValue, disabled, exact } = props || {};
-  const _name = React$1.useRef(name);
+  const _name = React.useRef(name);
   _name.current = name;
-  const callback = React$1.useCallback((formState) => {
+  const callback = React.useCallback((formState) => {
     if (shouldSubscribeByName(_name.current, formState.name, exact)) {
       const fieldValues = generateWatchOutput(_name.current, control._names, formState.values || control._formValues);
       updateValue(isUndefined(_name.current) || isObject(fieldValues) && !objectHasFunction(fieldValues) ? __spreadValues({}, fieldValues) : Array.isArray(fieldValues) ? [...fieldValues] : isUndefined(fieldValues) ? defaultValue : fieldValues);
@@ -184,8 +184,8 @@ function useWatch(props) {
     subject: control._subjects.watch,
     callback
   });
-  const [value, updateValue] = React$1.useState(isUndefined(defaultValue) ? control._getWatch(name) : defaultValue);
-  React$1.useEffect(() => {
+  const [value, updateValue] = React.useState(isUndefined(defaultValue) ? control._getWatch(name) : defaultValue);
+  React.useEffect(() => {
     control._removeUnmounted();
   });
   return value;
@@ -204,10 +204,10 @@ function useController(props) {
     control,
     name
   });
-  const _registerProps = React$1.useRef(control.register(name, __spreadProps(__spreadValues({}, props.rules), {
+  const _registerProps = React.useRef(control.register(name, __spreadProps(__spreadValues({}, props.rules), {
     value
   })));
-  React$1.useEffect(() => {
+  React.useEffect(() => {
     const updateMounted = (name2, value2) => {
       const field = get(control._fields, name2);
       if (field) {
@@ -224,7 +224,7 @@ function useController(props) {
     field: {
       name,
       value,
-      onChange: React$1.useCallback((event) => {
+      onChange: React.useCallback((event) => {
         _registerProps.current.onChange({
           target: {
             value: getEventValue(event),
@@ -233,7 +233,7 @@ function useController(props) {
           type: EVENTS.CHANGE
         });
       }, [name]),
-      onBlur: React$1.useCallback(() => {
+      onBlur: React.useCallback(() => {
         _registerProps.current.onBlur({
           target: {
             value: get(control._formValues, name),
@@ -242,7 +242,7 @@ function useController(props) {
           type: EVENTS.BLUR
         });
       }, [name, control]),
-      ref: React$1.useCallback((elm) => {
+      ref: React.useCallback((elm) => {
         const field = get(control._fields, name);
         if (elm && field && elm.focus) {
           field._f.ref = {
@@ -571,7 +571,7 @@ var skipValidation = (isBlurEvent, isTouched, isSubmitted, reValidateMode, mode)
   return true;
 };
 var unsetEmptyArray = (ref, name) => !compact(get(ref, name)).length && unset(ref, name);
-var isMessage = (value) => isString(value) || React$1.isValidElement(value);
+var isMessage = (value) => isString(value) || React.isValidElement(value);
 function getValidateError(result, ref, type = "validate") {
   if (isMessage(result) || Array.isArray(result) && result.every(isMessage) || isBoolean(result) && !result) {
     return {
@@ -749,10 +749,10 @@ function createFormControl(props = {}) {
     watch: false
   };
   let _names = {
-    mount: new Set(),
-    unMount: new Set(),
-    array: new Set(),
-    watch: new Set()
+    mount: /* @__PURE__ */ new Set(),
+    unMount: /* @__PURE__ */ new Set(),
+    array: /* @__PURE__ */ new Set(),
+    watch: /* @__PURE__ */ new Set()
   };
   let delayErrorCallback;
   let timer = 0;
@@ -924,7 +924,7 @@ function createFormControl(props = {}) {
       const field = get(_fields, name);
       field && (field._f.refs ? field._f.refs.every((ref) => !live(ref)) : !live(field._f.ref)) && unregister(name);
     }
-    _names.unMount = new Set();
+    _names.unMount = /* @__PURE__ */ new Set();
   };
   const _getDirty = (name, data) => (name && data && set(_formValues, name, data), !deepEqual(getValues(), _defaultValues));
   const _getWatch = (names, defaultValue, isGlobal) => {
@@ -1276,10 +1276,10 @@ function createFormControl(props = {}) {
       });
     }
     _names = {
-      mount: new Set(),
-      unMount: new Set(),
-      array: new Set(),
-      watch: new Set(),
+      mount: /* @__PURE__ */ new Set(),
+      unMount: /* @__PURE__ */ new Set(),
+      array: /* @__PURE__ */ new Set(),
+      watch: /* @__PURE__ */ new Set(),
       watchAll: false,
       focus: ""
     };
@@ -1364,9 +1364,9 @@ function createFormControl(props = {}) {
     getFieldState
   };
 }
-function useForm(props = {}) {
-  const _formControl = React$1.useRef();
-  const [formState, updateFormState] = React$1.useState({
+function useForm(props) {
+  const _formControl = React.useRef();
+  const [formState, updateFormState] = React.useState({
     isDirty: false,
     isValidating: false,
     dirtyFields: {},
@@ -1386,7 +1386,7 @@ function useForm(props = {}) {
     });
   }
   const control = _formControl.current.control;
-  const callback = React$1.useCallback((value) => {
+  const callback = React.useCallback((value) => {
     if (shouldRenderFormState(value, control._proxyFormState, true)) {
       control._formState = __spreadValues(__spreadValues({}, control._formState), value);
       updateFormState(__spreadValues({}, control._formState));
@@ -1396,7 +1396,7 @@ function useForm(props = {}) {
     subject: control._subjects.state,
     callback
   });
-  React$1.useEffect(() => {
+  React.useEffect(() => {
     if (!control._stateFlags.mount) {
       control._proxyFormState.isValid && control._updateValid();
       control._stateFlags.mount = true;
@@ -1519,7 +1519,7 @@ function BaseController({
   renderElement
 }) {
   const { control } = useFormContext();
-  return /* @__PURE__ */ React$1.createElement(Controller, {
+  return /* @__PURE__ */ React.createElement(Controller, {
     name,
     control,
     render: (props) => renderElement({ attributes: props, abiInputItem }) || null
@@ -1527,52 +1527,53 @@ function BaseController({
 }
 const ControllerEntry = ({ inputItem, renderElement, abiName }) => {
   if (!inputItem.type) {
-    return /* @__PURE__ */ React$1.createElement(React$1.Fragment, null);
+    return /* @__PURE__ */ React.createElement(React.Fragment, null);
   }
   const controllerName = `${abiName}_${inputItem.name}`;
-  return /* @__PURE__ */ React$1.createElement(BaseController, {
+  return /* @__PURE__ */ React.createElement(BaseController, {
     name: controllerName,
     abiInputItem: inputItem,
     renderElement
   });
 };
-const DefaultGroupWrapper = (props) => {
+const DefaultGroupItemWrapper = (props) => {
   const { children, abiItem, methods, onSubmit } = props;
   const { handleSubmit } = methods;
   const submit = (e) => {
     onSubmit && onSubmit(abiItem, e);
   };
-  return /* @__PURE__ */ React$1.createElement(React$1.Fragment, null, /* @__PURE__ */ React$1.createElement("div", null, children), /* @__PURE__ */ React$1.createElement("button", {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", null, children), /* @__PURE__ */ React.createElement("button", {
     onClick: handleSubmit(submit)
   }, abiItem.name));
 };
 const DefaultElement = ({ attributes, abiInputItem }) => {
   const { field, fieldState: { error } } = attributes || {};
   if (abiInputItem.type === "address") {
-    return /* @__PURE__ */ React$1.createElement(React$1.Fragment, null, /* @__PURE__ */ React$1.createElement("label", {
+    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("label", {
       style: { color: "black" }
-    }, abiInputItem.name), /* @__PURE__ */ React$1.createElement("input", __spreadValues({}, field)), /* @__PURE__ */ React$1.createElement("div", null, "error: ", error));
+    }, abiInputItem.name), /* @__PURE__ */ React.createElement("input", __spreadValues({}, field)), /* @__PURE__ */ React.createElement("div", null, "error: ", error));
   }
   if (abiInputItem.type === "uint256") {
-    return /* @__PURE__ */ React$1.createElement(React$1.Fragment, null, /* @__PURE__ */ React$1.createElement("label", {
+    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("label", {
       style: { color: "black" }
-    }, abiInputItem.name), /* @__PURE__ */ React$1.createElement("input", __spreadValues({}, field)), /* @__PURE__ */ React$1.createElement("div", null, "error: ", error));
+    }, abiInputItem.name), /* @__PURE__ */ React.createElement("input", __spreadValues({}, field)), /* @__PURE__ */ React.createElement("div", null, "error: ", error));
   }
-  return /* @__PURE__ */ React$1.createElement("div", null);
+  return /* @__PURE__ */ React.createElement("div", null);
 };
 const FormGroupItem = (props) => {
   const {
     index,
     abiItem,
+    address,
     onSubmit,
     renderElement = DefaultElement,
-    renderGroupWrapper = DefaultGroupWrapper
+    renderGroupItemWrapper = DefaultGroupItemWrapper
   } = props;
   const methods = useForm({});
   const children = useMemo(() => {
     const itemDomArr = [];
     for (let inputItem of (abiItem == null ? void 0 : abiItem.inputs) || []) {
-      itemDomArr.push(/* @__PURE__ */ React$1.createElement(ControllerEntry, {
+      itemDomArr.push(/* @__PURE__ */ React.createElement(ControllerEntry, {
         key: uniqueId_1(),
         abiName: abiItem.name || "",
         inputItem,
@@ -1581,23 +1582,23 @@ const FormGroupItem = (props) => {
     }
     return itemDomArr;
   }, [abiItem, renderElement]);
-  return /* @__PURE__ */ React$1.createElement(FormProvider, {
+  return /* @__PURE__ */ React.createElement(FormProvider, {
     methods,
     onSubmit: () => {
     }
-  }, renderGroupWrapper({ children, abiItem, methods, onSubmit, index }));
+  }, renderGroupItemWrapper({ address, children, abiItem, methods, onSubmit, index }));
 };
 const DefaultAbiSelect = ({ abi, onSelect }) => {
   const handleChange = (e) => {
     onSelect && onSelect(e.target.value);
   };
-  return /* @__PURE__ */ React$1.createElement("select", {
+  return /* @__PURE__ */ React.createElement("select", {
     onChange: handleChange
   }, abi && abi.map((item, index) => {
     if (!item.name) {
       return null;
     }
-    return /* @__PURE__ */ React$1.createElement("option", {
+    return /* @__PURE__ */ React.createElement("option", {
       key: item.name + index,
       value: item.name
     }, item.name);
@@ -1606,69 +1607,83 @@ const DefaultAbiSelect = ({ abi, onSelect }) => {
 function useChildren(props) {
   var _a;
   const {
-    renderGroupWrapper,
+    renderGroupItemWrapper,
     renderElement,
     renderABISelect = DefaultAbiSelect,
     openAbiSelect = false,
+    customSelect = false,
+    selectValue = null,
     onSubmit
   } = props;
-  const abi = useAbiGlobal();
-  const [selectABIKey, setSelectABIKey] = useState((_a = abi[0].name) != null ? _a : "");
+  const { abi, address } = useAbiGlobal();
+  const [selectABIKey, setSelectABIKey] = useState(selectValue || abi[0] && ((_a = abi[0].name) != null ? _a : ""));
   const ABISelect = renderABISelect || DefaultAbiSelect;
   const children = useMemo(() => {
     const temp = [];
-    if (openAbiSelect) {
+    console.log(abi);
+    if (openAbiSelect || customSelect) {
       if (!selectABIKey || selectABIKey === "") {
-        throw Error("\u4E0D\u5B58\u5728\u53EF\u9009\u7684ABI\u5185\u5BB9\uFF0C\u8BF7\u786E\u8BA4\u662F\u5426\u8F93\u5165\u6B63\u786E\u7684ABI");
+        return;
       }
       const curABIItem = abi.find((item) => item.name === selectABIKey) || { inputs: [] };
-      temp.push(/* @__PURE__ */ React$1.createElement(FormGroupItem, {
+      temp.push(/* @__PURE__ */ React.createElement(FormGroupItem, {
         key: uniqueId_1(),
         index: 0,
         abiItem: curABIItem,
         renderElement,
-        renderGroupWrapper,
-        onSubmit
+        renderGroupItemWrapper,
+        onSubmit,
+        address
       }));
     } else {
       for (let i = 0; i < abi.length; i++) {
         let curABIItem = abi[i];
-        temp.push(/* @__PURE__ */ React$1.createElement(FormGroupItem, {
+        temp.push(/* @__PURE__ */ React.createElement(FormGroupItem, {
           index: i,
           key: uniqueId_1(),
           abiItem: curABIItem,
           renderElement,
-          renderGroupWrapper,
-          onSubmit
+          renderGroupItemWrapper,
+          onSubmit,
+          address
         }));
       }
     }
     return temp;
-  }, [openAbiSelect, selectABIKey, abi, renderElement, renderGroupWrapper, onSubmit]);
-  const handleSelect = (selectValue) => {
-    setSelectABIKey(selectValue);
+  }, [openAbiSelect, selectABIKey, abi, renderElement, renderGroupItemWrapper, onSubmit]);
+  const handleSelect = (selectValue2) => {
+    setSelectABIKey(selectValue2);
   };
-  return /* @__PURE__ */ React$1.createElement(React$1.Fragment, null, openAbiSelect && /* @__PURE__ */ React$1.createElement(ABISelect, {
+  useEffect(() => {
+    if (selectValue) {
+      setSelectABIKey(selectValue);
+    }
+  }, [selectValue]);
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, openAbiSelect && !customSelect && /* @__PURE__ */ React.createElement(ABISelect, {
+    address,
     abi,
     onSelect: handleSelect
   }), children);
 }
-const Children = (props) => /* @__PURE__ */ React$1.createElement(React$1.Fragment, null, useChildren(props));
+const Children = (props) => /* @__PURE__ */ React.createElement(React.Fragment, null, useChildren(props));
 const FILTER_TYPE = [
   "constructor",
   "event"
 ];
-const formatAbi = (abi) => abi.filter((item) => !FILTER_TYPE.includes(item.type || "") && item.name);
+const filterAbiFunction = (abi) => abi.filter((item) => !FILTER_TYPE.includes(item.type || "") && item.name);
 const ContractForm = (props) => {
-  const { abi, renderElement, openAbiSelect, renderGroupWrapper, onSubmit, renderABISelect } = props;
-  return /* @__PURE__ */ React$1.createElement(AbiGlobalProvider, {
-    value: formatAbi(abi)
-  }, /* @__PURE__ */ React$1.createElement(Children, {
-    openAbiSelect,
-    renderABISelect,
-    renderGroupWrapper,
-    renderElement,
-    onSubmit
-  }));
+  const _a = props, {
+    abi,
+    address
+  } = _a, others = __objRest(_a, [
+    "abi",
+    "address"
+  ]);
+  return /* @__PURE__ */ React.createElement(AbiGlobalProvider, {
+    value: {
+      abi: filterAbiFunction(abi),
+      address
+    }
+  }, /* @__PURE__ */ React.createElement(Children, __spreadValues({}, others)));
 };
-export { ContractForm as default };
+export { ContractForm as default, filterAbiFunction };

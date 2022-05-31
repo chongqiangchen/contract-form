@@ -8,18 +8,21 @@ export interface IRenderElementProps {
 export declare type ISubmitFn = (abiItem: JsonFragment, changeValue: any) => void;
 export interface IABISelectProps {
     abi: IABI;
+    address: string;
     onSelect: Function;
 }
 export interface IFormGroupItemProps {
     index: number;
     abiItem: JsonFragment;
+    address: string;
     onSubmit?: ISubmitFn;
     renderElement?: (props: IRenderElementProps) => JSX.Element;
-    renderGroupWrapper?: (props: IRenderGroupWrapperProps) => JSX.Element;
+    renderGroupItemWrapper?: (props: IRenderGroupItemWrapperProps) => JSX.Element;
     renderABISelect?: (props: IABISelectProps) => JSX.Element;
 }
-export interface IRenderGroupWrapperProps {
+export interface IRenderGroupItemWrapperProps {
     index: number;
+    address: string;
     children: ReactNode;
     abiItem: JsonFragment;
     methods: UseFormReturn;
@@ -27,9 +30,11 @@ export interface IRenderGroupWrapperProps {
 }
 export interface IChildren {
     openAbiSelect?: boolean;
+    customSelect?: boolean;
+    selectValue?: any;
     onSubmit?: ISubmitFn;
     renderElement?: (props: IRenderElementProps) => JSX.Element;
-    renderGroupWrapper?: (props: IRenderGroupWrapperProps) => JSX.Element;
+    renderGroupItemWrapper?: (props: IRenderGroupItemWrapperProps) => JSX.Element;
     renderABISelect?: (props: IABISelectProps) => JSX.Element;
 }
 export interface IControllerEntryProps {

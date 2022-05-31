@@ -43,7 +43,7 @@ const AuthButton: React.FunctionComponent<AuthButtonProps> = (props) => {
                     {...props}
                     onClick={handleOpen}
                 >
-                    Connect Wallet
+                    连接钱包
                 </Button>
                 <Menu
                     keepMounted
@@ -56,8 +56,8 @@ const AuthButton: React.FunctionComponent<AuthButtonProps> = (props) => {
                             .map((x) => (
                                 <MenuItem disabled={!x.ready} key={x.name} onClick={() => handleConnect(x)}>
                                     {x.name}
-                                    {!x.ready && " (unsupported)"}
-                                    {isConnecting && x.id === pendingConnector?.id && ' (connecting)'}
+                                    {!x.ready && " (不支持)"}
+                                    {isConnecting && x.id === pendingConnector?.id && ' (连接中)'}
                                 </MenuItem>
                             ))
                     }
@@ -66,7 +66,7 @@ const AuthButton: React.FunctionComponent<AuthButtonProps> = (props) => {
         );
     }
 
-    return <Button {...props} onClick={() => disconnect()}>Discount</Button>;
+    return <Button {...props} onClick={() => disconnect()}>断开钱包</Button>;
 }
 
 export default AuthButton;

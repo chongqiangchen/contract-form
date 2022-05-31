@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 import uniqueId from "lodash/uniqueId";
 import FormProvider from '../../providers/FormProvider';
 import ControllerEntry from "../controllers";
-import { IFormGroupItemProps, IRenderElementProps, IRenderGroupWrapperProps } from "../../interfaces/component";
+import { IFormGroupItemProps, IRenderElementProps, IRenderGroupItemWrapperProps } from "../../interfaces/component";
 
-const DefaultGroupWrapper = (props: IRenderGroupWrapperProps) => {
+const DefaultGroupItemWrapper = (props: IRenderGroupItemWrapperProps) => {
     const { children, abiItem, methods, onSubmit } = props;
 
     const { handleSubmit } = methods;
@@ -51,11 +51,11 @@ const FormGroupItem = (props: IFormGroupItemProps) => {
     const {
         index,
         abiItem,
+        address,
         onSubmit,
         renderElement = DefaultElement,
-        renderGroupWrapper = DefaultGroupWrapper
+        renderGroupItemWrapper = DefaultGroupItemWrapper
     } = props;
-
     const methods = useForm({});
     const children = useMemo(() => {
         const itemDomArr = [];
@@ -74,7 +74,7 @@ const FormGroupItem = (props: IFormGroupItemProps) => {
 
     return (
         <FormProvider methods={methods} onSubmit={() => {}}>
-            {renderGroupWrapper({ children, abiItem, methods, onSubmit, index })}
+            {renderGroupItemWrapper({ address, children, abiItem, methods, onSubmit, index })}
         </FormProvider>
     )
 }

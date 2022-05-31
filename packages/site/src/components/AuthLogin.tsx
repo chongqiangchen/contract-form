@@ -27,13 +27,14 @@ const AuthLogin: React.FC = () => {
         switchNetwork && switchNetwork(x.id)
         handleClose()
     }
-
+        console.log(activeChain);
+        
     return (
         <Stack direction="row">
             <Button variant="outlined" onClick={handleOpen}>
                 <div>
-                    Connected to {activeChain?.name ?? activeChain?.id}
-                    {activeChain?.unsupported && ' (unsupported)'}
+                    {activeChain?.name ?? activeChain?.id}
+                    {activeChain?.unsupported && ' (不支持)'}
                 </div>
             </Button>
             <Menu
@@ -45,9 +46,9 @@ const AuthLogin: React.FC = () => {
                 {switchNetwork && (
                     chains.map((x: any) =>
                         x.id === activeChain?.id ? null : (
-                            <MenuItem key={x.id} onClick={() => handleConnect(x.id)}>
+                            <MenuItem key={x.id} onClick={() => handleConnect(x)}>
                                 {x.name}
-                                {isLoading && x.id === pendingChainId && ' (switching)'}
+                                {isLoading && x.id === pendingChainId && ' (切换中)'}
                             </MenuItem>
                         ),
                     )

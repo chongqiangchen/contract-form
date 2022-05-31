@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     IChildren,
     IABISelectProps,
@@ -29,22 +29,26 @@ const DefaultAbiSelect = ({ abi, onSelect }: IABISelectProps) => {
 
 function useChildren(props: IChildren) {
     const {
-        renderGroupWrapper,
+        renderGroupItemWrapper,
         renderElement,
         renderABISelect = DefaultAbiSelect,
         openAbiSelect = false,
+        customSelect = false,
+        selectValue = null,
         onSubmit
     } = props;
-    const abi = useAbiGlobal();
-    const [selectABIKey, setSelectABIKey] = useState<string>(abi[0].name ?? '');
+    const {abi, address} = useAbiGlobal();
+    const [selectABIKey, setSelectABIKey] = useState<string>(selectValue || abi[0] && (abi[0].name ?? ''));
     const ABISelect = renderABISelect || DefaultAbiSelect;
 
     const children = useMemo(() => {
         const temp = [];
+        console.log(abi);
 
-        if (openAbiSelect) {
+        if (openAbiSelect || customSelect) {
             if (!selectABIKey || selectABIKey === '') {
-                throw Error('不存在可选的ABI内容，请确认是否输入正确的ABI');
+                // throw Error('不存在可选的ABI内容，请确认是否输入正确的ABI');
+                return;
             }
 
             const curABIItem = abi.find(item => item.name === selectABIKey) || { inputs: [] };
@@ -54,8 +58,9 @@ function useChildren(props: IChildren) {
                     index={0}
                     abiItem={curABIItem}
                     renderElement={renderElement}
-                    renderGroupWrapper={renderGroupWrapper}
+                    renderGroupItemWrapper={renderGroupItemWrapper}
                     onSubmit={onSubmit}
+                    address={address}
                 />
             );
         } else {
@@ -67,22 +72,29 @@ function useChildren(props: IChildren) {
                         key={uniqueId()}
                         abiItem={curABIItem}
                         renderElement={renderElement}
-                        renderGroupWrapper={renderGroupWrapper}
+                        renderGroupItemWrapper={renderGroupItemWrapper}
                         onSubmit={onSubmit}
+                        address={address}
                     />
                 );
             }
         }
 
         return temp;
-    }, [openAbiSelect, selectABIKey, abi, renderElement, renderGroupWrapper, onSubmit]);
+    }, [openAbiSelect, selectABIKey, abi, renderElement, renderGroupItemWrapper, onSubmit]);
 
     const handleSelect = (selectValue: string) => {
         setSelectABIKey(selectValue);
     }
 
+    useEffect(() => {
+        if (selectValue) {
+            setSelectABIKey(selectValue);
+        }
+    }, [selectValue])
+
     return <>
-        {openAbiSelect && <ABISelect abi={abi} onSelect={handleSelect}/>}
+        {openAbiSelect && !customSelect && <ABISelect address={address} abi={abi} onSelect={handleSelect}/>}
         {children}
     </>;
 }

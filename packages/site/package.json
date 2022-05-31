@@ -10,6 +10,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "@fuordim/contract-form": "*",
+    "@mui/icons-material": "5.8.0",
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@mui/material": "latest",

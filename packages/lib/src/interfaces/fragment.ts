@@ -21,4 +21,4 @@ export interface IJsonFragment {
     readonly outputs?: ReadonlyArray<IJsonFragmentType>;
 
     readonly gas?: string;
-};
+}

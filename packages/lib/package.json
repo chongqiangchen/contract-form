@@ -2,7 +2,7 @@
   "name": "@fuordim/contract-form",
   "version": "0.0.1",
   "main": "./dist/index.es.js",
-  "types": "./types/index.d.ts",
+  "types": "./types/src/index.d.ts",
   "scripts": {
     "clean": "rm -rf dist types",
     "watch": "tsc -w | vite build --watch",

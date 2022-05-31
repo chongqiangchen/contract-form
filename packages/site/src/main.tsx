@@ -5,11 +5,12 @@ import { ThemeProvider } from '@mui/material/styles';
 import App from './App'
 import theme from './theme';
 import { chain, createClient, defaultChains, WagmiProvider } from 'wagmi';
-import { Chains } from './chain';
+import { Chains } from './constants/chain';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+import LogsProvider from './components/LogsProvider';
 
 const chains = defaultChains
 const defaultChain = chain.mainnet
@@ -44,8 +45,10 @@ const client = createClient({
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <WagmiProvider client={client}>
     <ThemeProvider theme={theme}>
+      <LogsProvider>
         <CssBaseline />
         <App />
+      </LogsProvider>
     </ThemeProvider>
   </WagmiProvider>
 )
