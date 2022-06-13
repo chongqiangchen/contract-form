@@ -1,4 +1,4 @@
-### @fuordim/contract-form
+### react-web3-contract-form
 
 ```
 const Element = ({ attributes, abiInputItem }: IRenderElementProps) => {

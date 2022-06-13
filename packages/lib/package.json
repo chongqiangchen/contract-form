@@ -1,8 +1,17 @@
 {
-  "name": "@fuordim/contract-form",
-  "version": "0.0.1",
+  "name": "react-web3-contract-form",
+  "version": "0.0.1-alpha.0",
   "main": "./dist/index.es.js",
   "types": "./types/src/index.d.ts",
+  "description": "Rapid Construction of Web3 contract form based on React",
+  "keywords": [
+    "web3",
+    "contract",
+    "contract-form",
+    "web3-contract-form",
+    "react"
+  ],
+  "author": "<chongqiangchen@gmail.com>",
   "scripts": {
     "clean": "rm -rf dist types",
     "watch": "tsc -w | vite build --watch",
@@ -30,7 +39,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/thzt/test-vite-lib"
+    "url": "https://github.com/chongqiangchen/contract-form"
   },
   "files": [
     "*"

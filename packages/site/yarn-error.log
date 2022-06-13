@@ -38,7 +38,7 @@ npm manifest:
     "dependencies": {
       "react": "^18.0.0",
       "react-dom": "^18.0.0",
-      "@fuordim/contract-form": "*",
+      "react-web3-contract-form": "*",
       "@emotion/react": "latest",
       "@emotion/styled": "latest",
       "@mui/material": "latest",

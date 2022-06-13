@@ -1,4 +1,4 @@
-import { IRenderElementProps } from "@fuordim/contract-form";
+import { IRenderElementProps } from "react-web3-contract-form";
 import { TextField } from "@mui/material";
 
 const Element = ({ attributes, abiInputItem }: IRenderElementProps) => {

@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import ContractForm, { filterAbiFunction, IRenderGroupItemWrapperProps } from '@fuordim/contract-form';
+import ContractForm, { filterAbiFunction, IRenderGroupItemWrapperProps } from 'react-web3-contract-form';
 import { useCallback, useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { useContract, useProvider, useSigner } from 'wagmi';
