@@ -16,7 +16,8 @@ jobs:
           yarn
           CI=false && yarn lib:build && yarn site:build
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: packages/site/dist # The folder the action should deploy.
+        uses: JamesIves/github-pages-deploy-action@v4.3.0
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: packages/site/dist
