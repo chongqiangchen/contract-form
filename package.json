@@ -10,7 +10,7 @@
   "scripts": {
     "site:run": "yarn workspace site run",
     "lib:run": "yarn workspace react-web3-contract-form run",
-    "site:dev": "yarn site:run dev",
+    "site:dev": "yarn site:run start",
     "site:build": "yarn site:run build",
     "lib:dev": "yarn lib:run watch",
     "lib:build": "yarn lib:run build"
