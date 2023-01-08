@@ -19,6 +19,7 @@ import autoScaleText from './utils/autoScaleText';
 import extractObjValues from './utils/extractObjValues';
 import { callWithEstimateGas } from './utils/estimateGas';
 import { useLogs } from './components/LogsProvider';
+import dayjs from 'dayjs';
 
 const RootStyle = styled('div')(() => ({
   padding: '30px',
@@ -44,31 +45,38 @@ const GroupItemWrapper = (props: IRenderGroupItemWrapperProps) => {
   const { children, abiItem, methods, index, address } = props;
   const { data: signer } = useSigner();
   const provider = useProvider();
-  const [result, setResult] = useState<any>('');
   const contract = useContract({
     addressOrName: address,
     contractInterface: [abiItem],
     signerOrProvider: signer || provider,
   });
   const { handleSubmit, control } = methods;
-  // const {addLog} = useLogs();
+  const {addLog} = useLogs();
 
-  const submit = useCallback(async (e: any) => {
+  const submit = async (e: any) => {
     const values = extractObjValues(e, ['payable']) || [];
     
     const payable = e.payable || 0;
-
-    const r = await callWithEstimateGas(contract, abiItem?.name || '', values, {value: payable})
-
-    setResult(String(r.hash));
-
     const isView = abiItem.stateMutability === 'view';
 
-    // addLog && addLog({
-    //   status: 'success',
-    //   message: `${abiItem?.name || ''}: ${isView ? String(r) : r.hash}`
-    // });
-  }, []);
+    let r: any = {};
+
+    try {
+      r = await callWithEstimateGas(contract, abiItem?.name || '', values, {value: payable})
+    } catch (e: any) {
+      console.log('error: ', e);
+      addLog && addLog({
+        status: 'error',
+        message: `${dayjs()} - ${abiItem?.name || ''}: ${String(e.message)}`
+      });
+      return;
+    }
+
+    addLog && addLog({
+      status: 'success',
+      message: `${abiItem?.name || ''}: ${isView ? String(r) : r.hash}`
+    });
+  };
 
   const CustomButton = () => {
     if (abiItem?.stateMutability === 'view') {
@@ -132,7 +140,7 @@ const GroupItemWrapper = (props: IRenderGroupItemWrapperProps) => {
       <Box my={2} display="flex" flexWrap="wrap" gap={2}>
         <CustomButton />
         {children}
-        <Typography>{result}</Typography>
+        {/* <Typography>{result}</Typography> */}
       </Box>
     </>
   )
@@ -176,7 +184,14 @@ const ContractNameSelect = ({ address, abi, onSelect, defaultValue }: any) => {
           <SearchIcon />
         </IconButton>
       </Paper>
-      <Stack direction="column" gap={2}>
+      <Stack 
+        direction="column" 
+        gap={2}
+        sx={{
+          maxHeight: 'calc(100vh - 190px)',
+          overflowY: 'auto',
+        }}
+      >
         {
           filterAbi && filterAbi.map((item, index) => {
             if (!item.name) {
@@ -212,6 +227,13 @@ function App() {
   const [contractAbi, setContractAbi] = useState<any[]>([]);
 
   const {logs} = useLogs();
+
+  const handleChangeContractAbi = (value: any) => {
+    setSelectValue('');
+    setTimeout(() => {
+      setInputContractAbi(value);
+    })
+  }
 
   useEffect(() => {
     if (inputContractAbi) {
@@ -264,7 +286,7 @@ function App() {
             multiline
             rows={4}
             value={inputContractAbi}
-            onChange={e => setInputContractAbi(e.target.value)}
+            onChange={e => handleChangeContractAbi(e.target.value)}
           />
           <Paper
             sx={{
@@ -283,9 +305,7 @@ function App() {
             >
               <Chip
                 label={'ERC20-TOKEN'}
-                onClick={() => {
-                  setInputContractAbi(JSON.stringify(ABI_BEP20, null, 2))
-                }}
+                onClick={() => handleChangeContractAbi(JSON.stringify(ABI_BEP20, null, 2))}
               />
             </ListItem>
             <ListItem
@@ -295,9 +315,7 @@ function App() {
             >
               <Chip
                 label={'ERC721-NFT'}
-                onClick={() => {
-                  setInputContractAbi(JSON.stringify(ABI_ERC721, null, 2))
-                }}
+                onClick={() => handleChangeContractAbi(JSON.stringify(ABI_ERC721, null, 2))}
               />
             </ListItem>
           </Paper>
@@ -330,9 +348,17 @@ function App() {
         </Grid>
         <Grid item xs={4}>
           <DividerTitle>合约调用日志</DividerTitle>
-          <Stack spacing={2}>
+          <Stack 
+            spacing={2}
+            sx={{
+              maxHeight: 'calc(100vh - 122px)',
+              overflowY: 'auto',
+            }}
+          >
             {logs && logs.map((item, index) => (
-              <Alert key={index} severity={item.status || 'info'}>{item.message}</Alert>
+              <Alert key={index} severity={item.status || 'info'}>
+                <span style={{wordBreak: 'break-all'}}>{item.message}</span>
+              </Alert>
             ))}
           </Stack>
         </Grid>

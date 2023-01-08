@@ -1,5 +1,5 @@
 import React from 'react';
-import { Children } from './hooks/useChildren';
+import Children from './components/Children';
 import { IABI, IChildren, ISubmitFn } from './interfaces/component';
 import { AbiGlobalProvider } from './providers/AbiGlobal';
 import filterAbiFunction from "./utils/filter-abi-function";

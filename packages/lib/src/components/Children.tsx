@@ -5,8 +5,7 @@ import {
     IRenderElementProps
 } from "../interfaces/component";
 import { useAbiGlobal } from '../providers/AbiGlobal';
-import FormGroupItem from "../components/form-group-item";
-import uniqueId from "lodash/uniqueId";
+import FormGroupItem from "./FormGroupItem";
 
 const DefaultAbiSelect = ({ abi, onSelect }: IABISelectProps) => {
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -27,7 +26,7 @@ const DefaultAbiSelect = ({ abi, onSelect }: IABISelectProps) => {
     )
 }
 
-function useChildren(props: IChildren) {
+const Children = (props: IChildren) => {
     const {
         renderGroupItemWrapper,
         renderElement,
@@ -37,13 +36,12 @@ function useChildren(props: IChildren) {
         selectValue = null,
         onSubmit
     } = props;
-    const {abi, address} = useAbiGlobal();
+    const { abi, address } = useAbiGlobal();
     const [selectABIKey, setSelectABIKey] = useState<string>(selectValue || abi[0] && (abi[0].name ?? ''));
     const ABISelect = renderABISelect || DefaultAbiSelect;
 
     const children = useMemo(() => {
         const temp = [];
-        console.log(abi);
 
         if (openAbiSelect || customSelect) {
             if (!selectABIKey || selectABIKey === '') {
@@ -54,7 +52,7 @@ function useChildren(props: IChildren) {
             const curABIItem = abi.find(item => item.name === selectABIKey) || { inputs: [] };
             temp.push(
                 <FormGroupItem
-                    key={uniqueId()}
+                    key={address + '_' + curABIItem.name + '_' + 0}
                     index={0}
                     abiItem={curABIItem}
                     renderElement={renderElement}
@@ -64,12 +62,12 @@ function useChildren(props: IChildren) {
                 />
             );
         } else {
-            for (let i = 0; i < abi.length; i++){
+            for (let i = 0; i < abi.length; i++) {
                 let curABIItem = abi[i];
                 temp.push(
                     <FormGroupItem
                         index={i}
-                        key={uniqueId()}
+                        key={address + '_' + curABIItem.name + '_' + i}
                         abiItem={curABIItem}
                         renderElement={renderElement}
                         renderGroupItemWrapper={renderGroupItemWrapper}
@@ -88,22 +86,13 @@ function useChildren(props: IChildren) {
     }
 
     useEffect(() => {
-        if (selectValue) {
-            setSelectABIKey(selectValue);
-        }
+        setSelectABIKey(selectValue);
     }, [selectValue])
 
     return <>
-        {openAbiSelect && !customSelect && <ABISelect address={address} abi={abi} onSelect={handleSelect}/>}
+        {openAbiSelect && !customSelect && <ABISelect address={address} abi={abi} onSelect={handleSelect} />}
         {children}
     </>;
 }
 
-const Children = (props: Parameters<typeof useChildren>[0]) => (
-    <React.Fragment>{useChildren(props)}</React.Fragment>
-)
-
-export {
-    useChildren,
-    Children
-};
+export default Children;

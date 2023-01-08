@@ -1513,38 +1513,14 @@ function FormProvider({ children, onSubmit, methods }) {
     onSubmit
   }, children));
 }
-function BaseController({
-  name,
-  abiInputItem,
-  renderElement
-}) {
-  const { control } = useFormContext();
-  return /* @__PURE__ */ React.createElement(Controller, {
-    name,
-    control,
-    render: (props) => renderElement({ attributes: props, abiInputItem }) || null
-  });
-}
-const ControllerEntry = ({ inputItem, renderElement, abiName }) => {
-  if (!inputItem.type) {
-    return /* @__PURE__ */ React.createElement(React.Fragment, null);
-  }
-  const controllerName = `${abiName}_${inputItem.name}`;
-  return /* @__PURE__ */ React.createElement(BaseController, {
-    name: controllerName,
-    abiInputItem: inputItem,
-    renderElement
-  });
-};
-const DefaultGroupItemWrapper = (props) => {
-  const { children, abiItem, methods, onSubmit } = props;
-  const { handleSubmit } = methods;
-  const submit = (e) => {
-    onSubmit && onSubmit(abiItem, e);
-  };
-  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", null, children), /* @__PURE__ */ React.createElement("button", {
-    onClick: handleSubmit(submit)
-  }, abiItem.name));
+const shallowCompare = (obj1, obj2) => Object.keys(obj1).length === Object.keys(obj2).length && Object.keys(obj1).every((key) => obj2.hasOwnProperty(key) && obj1[key] === obj2[key]);
+const Element = (_a) => {
+  var _b = _a, {
+    renderElement = DefaultElement
+  } = _b, otherProps = __objRest(_b, [
+    "renderElement"
+  ]);
+  return renderElement(otherProps);
 };
 const DefaultElement = ({ attributes, abiInputItem }) => {
   const { field, fieldState: { error } } = attributes || {};
@@ -1560,14 +1536,70 @@ const DefaultElement = ({ attributes, abiInputItem }) => {
   }
   return /* @__PURE__ */ React.createElement("div", null);
 };
+const MemoizedElement = React.memo(Element, (prev, next) => {
+  var _a, _b, _c, _d;
+  const isEqualValue = ((_b = (_a = prev.attributes) == null ? void 0 : _a.field) == null ? void 0 : _b.value) === ((_d = (_c = next.attributes) == null ? void 0 : _c.field) == null ? void 0 : _d.value);
+  return isEqualValue && shallowCompare(prev.abiInputItem, next.abiInputItem) && prev.renderElement === next.renderElement;
+});
+function BaseController({
+  name,
+  abiInputItem,
+  renderElement
+}) {
+  const { control } = useFormContext();
+  return /* @__PURE__ */ React.createElement(Controller, {
+    name,
+    control,
+    render: (props) => {
+      console.log(props);
+      return /* @__PURE__ */ React.createElement(MemoizedElement, {
+        renderElement,
+        attributes: props,
+        abiInputItem
+      }) || null;
+    }
+  });
+}
+const ControllerEntry = ({ inputItem, renderElement, abiName }) => {
+  if (!inputItem.type) {
+    return /* @__PURE__ */ React.createElement(React.Fragment, null);
+  }
+  const controllerName = `${abiName}_${inputItem.name}`;
+  return /* @__PURE__ */ React.createElement(BaseController, {
+    name: controllerName,
+    abiInputItem: inputItem,
+    renderElement
+  });
+};
+const GroupItemWrapper = (_c) => {
+  var _d = _c, {
+    renderGroupItemWrapper = DefaultGroupItemWrapper
+  } = _d, otherProps = __objRest(_d, [
+    "renderGroupItemWrapper"
+  ]);
+  return renderGroupItemWrapper(otherProps);
+};
+const DefaultGroupItemWrapper = (props) => {
+  const { children, abiItem, methods, onSubmit } = props;
+  const { handleSubmit } = methods;
+  const submit = (e) => {
+    onSubmit && onSubmit(abiItem, e);
+  };
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", null, children), /* @__PURE__ */ React.createElement("button", {
+    onClick: handleSubmit(submit)
+  }, abiItem.name));
+};
+const MemoizedGroupItemWrapper = React.memo(GroupItemWrapper, (prev, next) => {
+  return prev.address === next.address && shallowCompare(prev.abiItem, next.abiItem) && prev.renderGroupItemWrapper === next.renderGroupItemWrapper && prev.onSubmit === next.onSubmit;
+});
 const FormGroupItem = (props) => {
   const {
     index,
     abiItem,
     address,
     onSubmit,
-    renderElement = DefaultElement,
-    renderGroupItemWrapper = DefaultGroupItemWrapper
+    renderElement,
+    renderGroupItemWrapper
   } = props;
   const methods = useForm({});
   const children = useMemo(() => {
@@ -1582,12 +1614,27 @@ const FormGroupItem = (props) => {
     }
     return itemDomArr;
   }, [abiItem, renderElement]);
+  const groupItemWrapperProps = useMemo(() => {
+    return {
+      address,
+      children,
+      abiItem,
+      methods,
+      onSubmit,
+      index
+    };
+  }, [address, children, abiItem, methods, onSubmit, index]);
   return /* @__PURE__ */ React.createElement(FormProvider, {
     methods,
     onSubmit: () => {
     }
-  }, renderGroupItemWrapper({ address, children, abiItem, methods, onSubmit, index }));
+  }, /* @__PURE__ */ React.createElement(MemoizedGroupItemWrapper, __spreadProps(__spreadValues({}, groupItemWrapperProps), {
+    renderGroupItemWrapper
+  })));
 };
+const MemoizedFormGroupItem = React.memo(FormGroupItem, (prev, next) => {
+  return shallowCompare(prev.abiItem, next.abiItem) && prev.renderElement === next.renderElement && prev.renderGroupItemWrapper === next.renderGroupItemWrapper && prev.address === next.address;
+});
 const DefaultAbiSelect = ({ abi, onSelect }) => {
   const handleChange = (e) => {
     onSelect && onSelect(e.target.value);
@@ -1604,7 +1651,7 @@ const DefaultAbiSelect = ({ abi, onSelect }) => {
     }, item.name);
   }));
 };
-function useChildren(props) {
+const Children = (props) => {
   var _a;
   const {
     renderGroupItemWrapper,
@@ -1620,14 +1667,13 @@ function useChildren(props) {
   const ABISelect = renderABISelect || DefaultAbiSelect;
   const children = useMemo(() => {
     const temp = [];
-    console.log(abi);
     if (openAbiSelect || customSelect) {
       if (!selectABIKey || selectABIKey === "") {
         return;
       }
       const curABIItem = abi.find((item) => item.name === selectABIKey) || { inputs: [] };
-      temp.push(/* @__PURE__ */ React.createElement(FormGroupItem, {
-        key: uniqueId_1(),
+      temp.push(/* @__PURE__ */ React.createElement(MemoizedFormGroupItem, {
+        key: address + "_" + curABIItem.name + "_" + 0,
         index: 0,
         abiItem: curABIItem,
         renderElement,
@@ -1638,9 +1684,9 @@ function useChildren(props) {
     } else {
       for (let i = 0; i < abi.length; i++) {
         let curABIItem = abi[i];
-        temp.push(/* @__PURE__ */ React.createElement(FormGroupItem, {
+        temp.push(/* @__PURE__ */ React.createElement(MemoizedFormGroupItem, {
           index: i,
-          key: uniqueId_1(),
+          key: address + "_" + curABIItem.name + "_" + i,
           abiItem: curABIItem,
           renderElement,
           renderGroupItemWrapper,
@@ -1655,17 +1701,14 @@ function useChildren(props) {
     setSelectABIKey(selectValue2);
   };
   useEffect(() => {
-    if (selectValue) {
-      setSelectABIKey(selectValue);
-    }
+    setSelectABIKey(selectValue);
   }, [selectValue]);
   return /* @__PURE__ */ React.createElement(React.Fragment, null, openAbiSelect && !customSelect && /* @__PURE__ */ React.createElement(ABISelect, {
     address,
     abi,
     onSelect: handleSelect
   }), children);
-}
-const Children = (props) => /* @__PURE__ */ React.createElement(React.Fragment, null, useChildren(props));
+};
 const FILTER_TYPE = [
   "constructor",
   "event"

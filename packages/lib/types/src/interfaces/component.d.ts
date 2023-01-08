@@ -40,6 +40,6 @@ export interface IChildren {
 export interface IControllerEntryProps {
     abiName: string;
     inputItem: JsonFragment;
-    renderElement: (props: IRenderElementProps) => JSX.Element;
+    renderElement?: (props: IRenderElementProps) => JSX.Element;
 }
 export declare type IABI = ReadonlyArray<JsonFragment>;

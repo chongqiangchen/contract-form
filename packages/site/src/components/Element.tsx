@@ -4,7 +4,7 @@ import { TextField } from "@mui/material";
 const Element = ({ attributes, abiInputItem }: IRenderElementProps) => {
   const { field, fieldState: { error } } = attributes || {};
 
-  console.log(abiInputItem);
+  console.log(attributes);
 
   if (
     abiInputItem.type === 'address' ||

@@ -14,7 +14,8 @@
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@mui/material": "latest",
-    "wagmi": "0.3.5"
+    "wagmi": "0.3.5",
+    "dayjs": "1.11.7"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
