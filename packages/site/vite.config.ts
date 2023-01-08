@@ -12,5 +12,6 @@ export default defineConfig({
       util: 'util',
     },
   },
-  plugins: [react()]
+  plugins: [react()],
+  base: '/contract-form/'
 })

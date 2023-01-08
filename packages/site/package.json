@@ -1,6 +1,7 @@
 {
   "name": "site",
   "version": "0.0.0",
+  "homepage": "/contract-form",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

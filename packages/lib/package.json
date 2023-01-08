@@ -1,6 +1,6 @@
 {
   "name": "react-web3-contract-form",
-  "version": "0.0.1-alpha.0",
+  "version": "0.0.1",
   "main": "./dist/index.es.js",
   "types": "./types/src/index.d.ts",
   "description": "Rapid Construction of Web3 contract form based on React",
