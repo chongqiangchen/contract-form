@@ -7,6 +7,7 @@
   "workspaces": [
     "packages/*/**"
   ],
+  "homepage": "/contract-form",
   "scripts": {
     "site:run": "yarn workspace site run",
     "lib:run": "yarn workspace react-web3-contract-form run",
