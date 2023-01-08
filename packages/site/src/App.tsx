@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import ContractForm, { filterAbiFunction, IRenderGroupItemWrapperProps } from 'react-web3-contract-form';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { useContract, useProvider, useSigner } from 'wagmi';
 import { Alert, Chip, Grid, IconButton, InputBase, ListItem, Paper, Typography } from '@mui/material';

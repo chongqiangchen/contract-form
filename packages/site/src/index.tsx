@@ -1,4 +1,4 @@
-import React from 'react'
+import reportWebVitals from './reportWebVitals';
 import ReactDOM from 'react-dom/client'
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
@@ -11,6 +11,7 @@ import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import LogsProvider from './components/LogsProvider';
+import React from 'react';
 
 const chains = defaultChains
 const defaultChain = chain.mainnet
@@ -52,3 +53,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </ThemeProvider>
   </WagmiProvider>
 )
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

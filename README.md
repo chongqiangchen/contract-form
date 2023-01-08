@@ -4,6 +4,6 @@
 
 #### live
 
-![live demo](./show.jpg)
+可以访问：https://chongqiangchen.github.io/contract-form/
 
-![live demo2](./show2.jpg)
+![live demo](./show.png)
