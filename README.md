@@ -4,6 +4,4 @@
 
 #### live
 
-![live demo](./show.jpg)
-
-![live demo2](./show2.jpg)
+![live demo](./show.png)
