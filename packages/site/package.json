@@ -1,6 +1,7 @@
 {
   "name": "site",
   "version": "0.0.0",
+  "homepage": "/contract-form",
   "dependencies": {
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
