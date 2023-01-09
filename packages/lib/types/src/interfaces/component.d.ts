@@ -5,7 +5,7 @@ export interface IRenderElementProps {
     abiInputItem: JsonFragment;
     attributes: any;
 }
-export declare type ISubmitFn = (abiItem: JsonFragment, changeValue: any) => void;
+export type ISubmitFn = (abiItem: JsonFragment, changeValue: any) => void;
 export interface IABISelectProps {
     abi: IABI;
     address: string;
@@ -42,4 +42,4 @@ export interface IControllerEntryProps {
     inputItem: JsonFragment;
     renderElement?: (props: IRenderElementProps) => JSX.Element;
 }
-export declare type IABI = ReadonlyArray<JsonFragment>;
+export type IABI = ReadonlyArray<JsonFragment>;
